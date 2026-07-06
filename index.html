@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MindBuddy - Your Friendly AI Companion & De-stress Agent</title>
+  <meta name="description" content="A supportive 5-Day AI Agent companion project to talk about worries, play games, and practice mindfulness.">
+  <link rel="stylesheet" href="style.css">
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+  <div class="app-container">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-logo">
+          <i class="fa-solid fa-feather-pointed"></i>
+        </div>
+        <h1 class="brand-name">MindBuddy</h1>
+      </div>
+      
+      <ul class="nav-links">
+        <li class="nav-item">
+          <a class="nav-link active" data-target="dashboard" id="nav-dashboard">
+            <i class="fa-solid fa-table-columns"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-target="chat" id="nav-chat">
+            <i class="fa-solid fa-comments"></i>
+            <span>Talk to ZenBuddy</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-target="journey" id="nav-journey">
+            <i class="fa-solid fa-calendar-day"></i>
+            <span>5-Day Journey</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-target="games" id="nav-games">
+            <i class="fa-solid fa-gamepad"></i>
+            <span>Game Center</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-target="journal" id="nav-journal">
+            <i class="fa-solid fa-book-open"></i>
+            <span>Worry Journal</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-target="settings" id="nav-settings">
+            <i class="fa-solid fa-sliders"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+      
+      <!-- User Progression Badge in Sidebar -->
+      <div class="user-status-card">
+        <span class="user-status-title">Your Progress</span>
+        <div class="user-day-badge">
+          <span class="day-dot"></span>
+          <span class="day-text" id="sidebar-day-text">Day 1: Grounding</span>
+        </div>
+        <div class="progress-bar-container">
+          <div class="progress-bar-fill" id="sidebar-progress-fill"></div>
+        </div>
+      </div>
+    </aside>
+    
+    <!-- Main Content Area -->
+    <main class="main-content">
+      
+      <!-- Top Header Bar -->
+      <header class="top-bar">
+        <div class="page-title-container">
+          <h2 class="page-title" id="page-title">Welcome Home</h2>
+          <span class="page-subtitle" id="page-subtitle">Your personal space for calm and clarity.</span>
+        </div>
+        
+        <div class="top-bar-actions">
+          <!-- Ambient Sound Generator Controls -->
+          <div class="ambient-sounds">
+            <span style="font-size: 0.75rem; font-weight:600;"><i class="fa-solid fa-volume-high"></i> Sounds:</span>
+            <button class="sound-toggle-btn" id="sound-rain" title="Toggle Rain Sound">
+              <i class="fa-solid fa-cloud-rain"></i>
+            </button>
+            <button class="sound-toggle-btn" id="sound-waves" title="Toggle Ocean Surf">
+              <i class="fa-solid fa-water"></i>
+            </button>
+            <button class="sound-toggle-btn" id="sound-hum" title="Toggle Cosmic Drone">
+              <i class="fa-solid fa-spa"></i>
+            </button>
+          </div>
+          
+          <!-- API Status indicators -->
+          <button class="icon-btn" id="api-indicator" title="Gemini API Configured" style="position:relative;">
+            <i class="fa-solid fa-key"></i>
+          </button>
+        </div>
+      </header>
+      
+      <!-- PAGE: DASHBOARD -->
+      <section class="page-section active" id="section-dashboard">
+        <div class="dashboard-grid">
+          
+          <!-- Welcome Hero Banner -->
+          <div class="glass-card welcome-card">
+            <div class="welcome-info">
+              <h3 class="welcome-title">Hi there, friend</h3>
+              <p class="welcome-desc">I am ZenBuddy, your mindful AI companion. I'm here to listen to your worries, play calming games, and guide you through a 5-day de-stress journey. Tell me, how are you feeling today?</p>
+              <div style="display:flex; gap:1rem;">
+                <button class="btn btn-primary" id="dash-start-btn">
+                  <i class="fa-solid fa-comment-dots"></i> Talk to Me
+                </button>
+                <button class="btn btn-secondary" id="dash-journey-btn">
+                  <i class="fa-solid fa-compass"></i> View 5-Day Plan
+                </button>
+              </div>
+            </div>
+            
+            <div class="welcome-avatar-container">
+              <div class="pulse-circle"></div>
+              <div class="pulse-circle-2"></div>
+              <div class="agent-avatar-glow">🤖</div>
+            </div>
+          </div>
+          
+          <!-- Day Summary Card -->
+          <div class="glass-card journey-tracker-card">
+            <div class="card-header">
+              <h4 class="card-title"><i class="fa-solid fa-route"></i> Your Journey Map</h4>
+              <span class="card-link" id="dash-map-link">Open Journey</span>
+            </div>
+            <div class="journey-days-stack" id="dash-days-stack">
+              <!-- Rendered dynamically in JS -->
+            </div>
+          </div>
+          
+          <!-- Daily Quote of Calm -->
+          <div class="glass-card quote-card">
+            <i class="fa-solid fa-quote-left quote-icon"></i>
+            <p class="quote-text" id="quote-display">"You don't have to control your thoughts. You just have to stop letting them control you."</p>
+            <span class="quote-author" id="quote-author">Dan Millman</span>
+          </div>
+          
+        </div>
+      </section>
+      
+      <!-- PAGE: CHAT (TALK TO AGENT) -->
+      <section class="chat-section" id="section-chat">
+        
+        <!-- Chat Profile Info (Left side in chat layout) -->
+        <div class="chat-sidebar">
+          <div class="agent-profile-large">
+            <div class="agent-avatar-large">
+              <span>🤖</span>
+              <span class="agent-pulse-light"></span>
+            </div>
+            <h3 class="agent-name-large" id="agent-display-name">ZenBuddy</h3>
+            <div class="agent-status-tag">
+              <span class="speaking-wave-container" id="agent-speech-wave">
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+                <span class="wave-bar"></span>
+              </span>
+              <span id="agent-status-text">Listening & Friend</span>
+            </div>
+          </div>
+          
+          <div class="chat-insights">
+            <div class="insight-card">
+              <span class="insight-title"><i class="fa-solid fa-brain"></i> Active Vibe</span>
+              <p class="insight-content" id="insight-vibe">Empathy mode is currently active. I'm focusing on validating your feelings and giving you a safe, judgment-free space to speak.</p>
+            </div>
+            <div class="insight-card">
+              <span class="insight-title"><i class="fa-solid fa-microphone"></i> Voice Settings</span>
+              <p class="insight-content" style="font-size:0.8rem;">Toggle the Microphone icon in the chatbox to speak. Make sure speech output is toggled in Settings to hear me talk back!</p>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Chat Interface Pane (Middle and Right) -->
+        <div class="chat-interface">
+          <div class="chat-history" id="chat-history-container">
+            <!-- Messages go here -->
+            <div class="message-bubble agent">
+              Hello there! I'm ZenBuddy. I'm here to listen to anything on your mind. You can type or click the microphone to speak to me.
+              <span class="message-time">Just now</span>
+            </div>
+          </div>
+          
+          <!-- Chat input footer -->
+          <div class="chat-input-container">
+            <div class="chat-input-wrapper">
+              <input type="text" class="chat-input" id="chat-input-field" placeholder="Share what's on your mind...">
+              
+              <div class="chat-input-actions">
+                <button class="chat-action-btn" id="mic-toggle-btn" title="Speak (Speech-to-Text)">
+                  <i class="fa-solid fa-microphone"></i>
+                </button>
+                <button class="chat-action-btn" id="synthesis-voice-btn" title="Synthesized Voice">
+                  <i class="fa-solid fa-ear-listen"></i>
+                </button>
+              </div>
+            </div>
+            
+            <button class="send-btn" id="chat-send-btn">
+              <i class="fa-solid fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+        
+      </section>
+      
+      <!-- PAGE: 5-DAY JOURNEY -->
+      <section class="page-section" id="section-journey">
+        <p class="page-subtitle" style="margin-top:-1.5rem; margin-bottom:1.5rem;">Take one step each day to quiet the noise, reflect, and find a sense of peace.</p>
+        
+        <!-- The Day Grid -->
+        <div class="journey-grid" id="journey-cards-grid">
+          <!-- Populated by journey.js -->
+        </div>
+        
+        <!-- Selected Active Day Exercise Panel -->
+        <div class="journey-interaction-panel" id="journey-interaction-panel">
+          <div class="panel-header">
+            <h3 class="panel-title" id="panel-exercise-title"><i class="fa-solid fa-circle-notch"></i> Interactive Exercise</h3>
+            <button class="close-interaction-btn" id="close-interaction-btn" title="Back to Journey Grid">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          </div>
+          
+          <!-- Dynamic Content based on current open exercise -->
+          <div id="panel-exercise-content">
+            
+            <!-- Day 1 Exercise: Box Breathing -->
+            <div id="exercise-day-1" style="display:none;">
+              <p style="text-align:center; color:var(--text-secondary); max-width:600px; margin:0 auto 1.5rem auto;">
+                Welcome to Box Breathing. Breathing deeply helps trigger the body's natural relaxation response. Follow the visual bubble below: inhale as it expands, hold, exhale as it shrinks, and hold.
+              </p>
+              <div class="breathing-exercise-container">
+                <div class="breathing-bubble-outer" id="breathing-bubble">
+                  <div class="breathing-bubble-inner" id="breathing-bubble-text">Ready</div>
+                </div>
+                <div class="breathing-guide-text" id="breathing-guide-text">Click Start below to begin</div>
+                <div class="breathing-actions">
+                  <button class="btn btn-primary" id="breath-control-btn">Start Breathing</button>
+                  <button class="btn btn-secondary" id="breath-complete-btn" disabled>Mark Complete</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Day 2 Exercise: Cognitive Reframing -->
+            <div id="exercise-day-2" style="display:none;">
+              <p style="color:var(--text-secondary); max-width:700px; margin-bottom:1.5rem;">
+                Cognitive reframing helps us identify negative thoughts and rewrite them from a more logical, compassionate, or positive angle. Let's do it together.
+              </p>
+              <div class="reframing-container">
+                <div class="reframe-box">
+                  <span class="reframe-label">1. Write your negative self-talk/worry</span>
+                  <textarea class="reframe-textarea" id="reframe-input-worry" placeholder="Example: 'I make mistakes at everything. I will fail this project.'"></textarea>
+                  <button class="btn btn-primary" id="reframe-submit-btn">Help me Reframe</button>
+                </div>
+                <div class="reframe-box">
+                  <span class="reframe-label">2. ZenBuddy's Compassionate Reframe</span>
+                  <div class="reframe-output" id="reframe-output-text">
+                    Your reframed thoughts will appear here. ZenBuddy will help you see the situation with more grace and clarity.
+                  </div>
+                  <button class="btn btn-secondary" id="reframe-complete-btn" style="align-self:flex-end;" disabled>Keep Reframe & Complete</button>
+                </div>
+              </div>
+            </div>
+            
+            <!-- Day 3 Exercise: Play distraction games -->
+            <div id="exercise-day-3" style="display:none;">
+              <div style="text-align:center; padding: 2rem;">
+                <h4 style="font-size:1.3rem; margin-bottom:1rem;">Day 3: Focus and Mindful Play</h4>
+                <p style="color:var(--text-secondary); max-width:600px; margin: 0 auto 1.5rem auto;">
+                  Today, ZenBuddy invites you to step away from your worries and engage your mind in play. Complete at least one round of Tic-Tac-Toe or the Word Association game in the Game Center!
+                </p>
+                <button class="btn btn-primary" id="day3-goto-games">Open Game Center</button>
+              </div>
+            </div>
+            
+            <!-- Day 4 Exercise: 3 Things of Gratitude -->
+            <div id="exercise-day-4" style="display:none;">
+              <p style="color:var(--text-secondary); max-width:700px; margin-bottom:1.5rem;">
+                Refocusing on the small, positive things in our lives helps retrain our minds to appreciate the present. Take a moment to list three things you are grateful for today, no matter how small.
+              </p>
+              <div class="gratitude-row">
+                <div class="gratitude-input-item">
+                  <span class="gratitude-num">1</span>
+                  <input type="text" class="gratitude-text-input" id="gratitude-1" placeholder="A warm cup of coffee, a call from a friend...">
+                </div>
+                <div class="gratitude-input-item">
+                  <span class="gratitude-num">2</span>
+                  <input type="text" class="gratitude-text-input" id="gratitude-2" placeholder="Something you learned, a beautiful sunset...">
+                </div>
+                <div class="gratitude-input-item">
+                  <span class="gratitude-num">3</span>
+                  <input type="text" class="gratitude-text-input" id="gratitude-3" placeholder="A cozy bed, a moment of silence...">
+                </div>
+              </div>
+              <div style="display:flex; justify-content:space-between; margin-top:1.5rem;">
+                <button class="btn btn-secondary" id="gratitude-speak-btn"><i class="fa-solid fa-volume-high"></i> Voice Affirmations</button>
+                <button class="btn btn-primary" id="gratitude-submit-btn">Share Gratitude</button>
+              </div>
+              <div id="gratitude-agent-feedback" class="reframe-output" style="margin-top:1.5rem; display:none;">
+                <!-- Filled dynamically by agent -->
+              </div>
+            </div>
+            
+            <!-- Day 5 Exercise: Letter to Future Self -->
+            <div id="exercise-day-5" style="display:none;">
+              <p style="color:var(--text-secondary); max-width:700px; margin-bottom:1.5rem;">
+                Congratulations on reaching Day 5! To wrap up your journey, write a message or letter to your future self. What intentions do you want to carry forward? What did you discover about your strength this week? ZenBuddy will keep this safe in your Worry Journal.
+              </p>
+              <div style="display:flex; flex-direction:column; gap:1rem;">
+                <textarea class="reframe-textarea" id="future-letter-input" style="height:160px;" placeholder="Dear Future Me, I hope you remember that you are stronger than you think. Over these 5 days, I learned that my worries do not define me..."></textarea>
+                <div style="display:flex; justify-content:flex-end; gap:1rem;">
+                  <button class="btn btn-primary" id="future-letter-submit">Lock Letter & Finish Journey</button>
+                </div>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+      
+      <!-- PAGE: GAME CENTER -->
+      <section class="page-section" id="section-games">
+        <p class="page-subtitle" style="margin-top:-1.5rem; margin-bottom:1.5rem;">Calm your mind, build new associations, or play a friendly game of Tic-Tac-Toe directly with ZenBuddy.</p>
+        
+        <div class="games-grid">
+          <!-- Game 1 Card -->
+          <div class="game-card">
+            <div class="game-card-icon"><i class="fa-solid fa-gamepad"></i></div>
+            <h3 class="game-card-title">Tic-Tac-Toe vs ZenBuddy</h3>
+            <p class="game-card-desc">Play a friendly round of match-three against ZenBuddy. Be warned: the agent will comment, react, and cheer you on in real time based on your moves!</p>
+            <button class="btn btn-primary game-select-btn" data-game="ttt">Play vs Agent</button>
+          </div>
+          <!-- Game 2 Card -->
+          <div class="game-card">
+            <div class="game-card-icon"><i class="fa-solid fa-shuffle"></i></div>
+            <h3 class="game-card-title">Word Association Chain</h3>
+            <p class="game-card-desc">ZenBuddy says a positive or calming word, and you follow up with whatever it makes you think of. Together, let's create a chain of light and optimism.</p>
+            <button class="btn btn-primary game-select-btn" data-game="words">Start Word Chain</button>
+          </div>
+          <!-- Game 3 Card -->
+          <div class="game-card">
+            <div class="game-card-icon"><i class="fa-solid fa-brain"></i></div>
+            <h3 class="game-card-title">Memory Cards of Calm</h3>
+            <p class="game-card-desc">Flip and match cards representing soothing objects (flower, candle, cloud, sun, moon). Excellent for focusing the mind and improving concentration.</p>
+            <button class="btn btn-primary game-select-btn" data-game="memory">Match Cards</button>
+          </div>
+        </div>
+        
+        <!-- Active Game Play Area -->
+        <div class="game-play-area" id="game-play-area">
+          <div style="width:100%; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-glass); padding-bottom:1rem;">
+            <h3 id="game-play-title" style="font-size:1.3rem;">Game Loading</h3>
+            <button class="close-interaction-btn" id="close-game-btn" title="Back to Game Choices">
+              <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+          </div>
+          
+          <!-- Tic-Tac-Toe Arena -->
+          <div id="game-arena-ttt" style="display:none; text-align:center;">
+            <div class="ttt-board" id="ttt-board">
+              <div class="ttt-cell" data-idx="0"></div>
+              <div class="ttt-cell" data-idx="1"></div>
+              <div class="ttt-cell" data-idx="2"></div>
+              <div class="ttt-cell" data-idx="3"></div>
+              <div class="ttt-cell" data-idx="4"></div>
+              <div class="ttt-cell" data-idx="5"></div>
+              <div class="ttt-cell" data-idx="6"></div>
+              <div class="ttt-cell" data-idx="7"></div>
+              <div class="ttt-cell" data-idx="8"></div>
+            </div>
+            <div id="ttt-status" style="font-weight:600; margin:1rem 0; color:var(--accent-teal);">Your Turn (X)</div>
+            <button class="btn btn-secondary btn-sm" id="ttt-reset-btn">Reset Board</button>
+          </div>
+          
+          <!-- Word Chain Arena -->
+          <div id="game-arena-words" style="display:none; width:100%; max-width:500px;">
+            <div class="word-assoc-container">
+              <div class="word-chain-box" id="word-chain-box">
+                <!-- Word pills populated in JS -->
+              </div>
+              <div style="display:flex; gap:0.75rem;">
+                <input type="text" class="chat-input" id="word-game-input" placeholder="Type a related positive word..." style="padding:0.7rem 1.2rem;">
+                <button class="send-btn" id="word-game-send-btn" style="width:38px; height:38px;"><i class="fa-solid fa-arrow-right"></i></button>
+              </div>
+              <button class="btn btn-secondary btn-sm" id="word-game-reset-btn" style="margin-top:0.5rem; align-self:flex-start;">Reset Chain</button>
+            </div>
+          </div>
+          
+          <!-- Memory Arena -->
+          <div id="game-arena-memory" style="display:none; text-align:center;">
+            <div class="memory-board" id="memory-board">
+              <!-- Grid populated in JS -->
+            </div>
+            <div id="memory-status" style="font-weight:600; margin:1rem 0; color:var(--accent-teal);">Matches: 0 / 8</div>
+            <button class="btn btn-secondary btn-sm" id="memory-reset-btn">Restart Memory Game</button>
+          </div>
+          
+          <!-- Mini Chat response widget under game -->
+          <div id="game-agent-commentary" style="margin-top:1rem; border-top:1px solid rgba(255,255,255,0.05); padding-top:1rem; width:100%; text-align:center; font-style:italic; font-size:0.9rem; color:var(--text-secondary);">
+            ZenBuddy says: "Ready when you are! Let's have some fun."
+          </div>
+        </div>
+      </section>
+      
+      <!-- PAGE: WORRY JOURNAL -->
+      <section class="page-section" id="section-journal">
+        <p class="page-subtitle" style="margin-top:-1.5rem; margin-bottom:1.5rem;">Review your shared worries, reflections, and ZenBuddy's insights to see how far you've come.</p>
+        
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+          <h3 style="font-size:1.15rem; font-weight:600;"><i class="fa-solid fa-clock-rotate-left"></i> Your History</h3>
+          <button class="btn btn-secondary btn-sm" id="clear-journal-btn"><i class="fa-solid fa-trash-can"></i> Clear History</button>
+        </div>
+        
+        <div class="journal-list" id="journal-list-container">
+          <!-- Dynamically populated -->
+        </div>
+      </section>
+      
+      <!-- PAGE: SETTINGS -->
+      <section class="page-section" id="section-settings">
+        <p class="page-subtitle" style="margin-top:-1.5rem; margin-bottom:1.5rem;">Configure your AI Agent's intelligence, voice synthesizer, and manage your progress data.</p>
+        
+        <div class="glass-card" style="margin-top:1.5rem;">
+          <div class="settings-grid">
+            
+            <div class="setting-group">
+              <label class="setting-label">Gemini API Key (Optional)</label>
+              <input type="password" class="setting-input" id="settings-api-key" placeholder="AIzaSy...">
+              <p class="setting-help">Connecting a key gives your ZenBuddy partner advanced intelligence to address worries dynamically. If empty, a beautiful client-side emotional support engine will be used.</p>
+            </div>
+            
+            <div class="setting-group">
+              <label class="setting-label">AI Agent Name</label>
+              <input type="text" class="setting-input" id="settings-agent-name" placeholder="ZenBuddy">
+              <p class="setting-help">Personalize your friend's name (e.g., Aura, Serene, Buddy, Joy).</p>
+            </div>
+            
+            <div class="setting-group">
+              <label class="setting-label">Voice Synthesis Settings</label>
+              <select class="setting-input" id="settings-voice-select">
+                <option value="none">Browser Default Voice</option>
+              </select>
+              <div style="display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem;">
+                <input type="checkbox" id="settings-speech-output-active" checked>
+                <label for="settings-speech-output-active" style="font-size:0.8rem; color:var(--text-secondary);">Enable voice speech back</label>
+              </div>
+            </div>
+            
+            <div class="setting-group" style="justify-content:flex-end;">
+              <div style="display:flex; gap:1rem;">
+                <button class="btn btn-primary" id="save-settings-btn"><i class="fa-solid fa-floppy-disk"></i> Save Settings</button>
+                <button class="btn btn-secondary" id="reset-progress-btn" style="border-color:rgba(236,72,153,0.3); color:var(--accent-pink);"><i class="fa-solid fa-rotate-left"></i> Reset Progress</button>
+              </div>
+            </div>
+            
+          </div>
+        </div>
+      </section>
+      
+    </main>
+  </div>
+  
+  <script src="journey.js"></script>
+  <script src="games.js"></script>
+  <script src="agent.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
