@@ -13,27 +13,35 @@ MindBuddy is a client-side AI companion website designed for a 5-day emotional h
 
 ## 🚀 How to Run the Website
 
-Since the app is built as a self-contained web app using standard HTML, CSS, and Javascript, you can run it in two easy ways:
+You can run the project in three different ways depending on your needs:
 
-### Option A: Open directly in your browser
-1. Locate the file `C:\Users\HP\mindbuddy\index.html` in your file explorer.
-2. Double-click it (or right-click -> Open With -> Google Chrome / Microsoft Edge).
-
-### Option B: Run a local developer server (Recommended)
-Running it through a local server ensures that advanced browser speech APIs work flawlessly without origin restrictions.
-1. Open PowerShell or Command Prompt.
-2. Navigate to the project directory:
+### Option A: Secure Server Mode (Recommended for Shared Multi-User Chat)
+This mode runs a Python Flask backend that securely proxies your Gemini API calls, so that **none of your visitors need to enter an API key themselves**, and your private key is kept hidden.
+1. Create a `config.json` file in the project folder (use `config.json.example` as a template) and add your `GEMINI_API_KEY`.
+2. Open PowerShell or Command Prompt in the project folder:
    ```powershell
    cd C:\Users\HP\mindbuddy
    ```
-3. Start Python's built-in lightweight server:
+3. Start the Flask backend:
+   ```powershell
+   python server.py
+   ```
+4. Open your browser and go to `http://localhost:8000`.
+
+### Option B: Local Static Server (Quick testing)
+A lightweight static server. In this mode, users will use the offline local emotional fallback conversation engine, or they can enter their own API key in their local Settings tab.
+1. Navigate to the project directory:
+   ```powershell
+   cd C:\Users\HP\mindbuddy
+   ```
+2. Start Python's built-in static server:
    ```powershell
    python -m http.server 8000
    ```
-4. Open your browser and go to:
-   ```
-   http://localhost:8000
-   ```
+3. Open your browser and go to `http://localhost:8000`.
+
+### Option C: Direct Browser Launch
+1. Double-click `index.html` in your file explorer to open it directly. (Note: Some advanced speech-to-text features may require running a server to comply with browser origin rules).
 
 ## 📅 The 5-Day Guided Journey
 1. **Day 1: Grounding & Venting** - Share worries in chat (marks off "Vent worry" task) and practice 4-4-4-4 Box Breathing.

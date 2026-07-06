@@ -1,0 +1,12 @@
+# Ignore private API keys
+config.json
+
+# Ignore Python caches
+__pycache__/
+*.pyc
+
+# Local environments
+.venv/
+env/
+venv/
+ENV/

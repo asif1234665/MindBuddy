@@ -175,17 +175,42 @@ class AgentBrain {
 
   // --- Brain Reasoning & Conversational API ---
   async getResponse(userInput, history = []) {
-    // If Gemini key is set, attempt Gemini API fetch
+    // 1. If a client-side API key is saved in settings, use that directly
     if (this.geminiApiKey) {
       try {
         return await this.callGeminiAPI(userInput, history);
       } catch (err) {
-        console.error("Gemini API Error, falling back to local brain:", err);
-        return this.getLocalBrainResponse(userInput);
+        console.error("Client Gemini API Error, falling back to server/local:", err);
       }
-    } else {
-      return this.getLocalBrainResponse(userInput);
     }
+
+    // 2. Otherwise, check if we can use the server proxy endpoint (/api/chat)
+    try {
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          message: userInput,
+          history: history,
+          agent_name: this.name
+        })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data.success && data.reply) {
+          return data.reply;
+        }
+      }
+    } catch (err) {
+      // Fetch failed - likely running static index.html or server is offline
+      console.log("Server proxy chat not available, using local brain fallback.");
+    }
+
+    // 3. Fall back to local emotional support engine
+    return this.getLocalBrainResponse(userInput);
   }
 
   async callGeminiAPI(userInput, history) {
